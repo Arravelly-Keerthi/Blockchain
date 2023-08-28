@@ -1,0 +1,33 @@
+/* record.css */
+.record-container {
+  margin-top: 20px;
+}
+
+.record-header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+.record-content {
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.record-actions {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.record-actions button {
+  margin-right: 10px;
+}
+
+.record-diagnosis {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.record-comments {
+  margin-top: 10px;
+}

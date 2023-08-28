@@ -1,0 +1,152 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background-color: #333;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  
+  .navbar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar-brand {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .navbar-brand:hover {
+    color: #ff0066; /* Change to your desired hover color */
+  }
+  
+  .navbar-brand:nth-child(1) {
+    margin-left: 10px; /* Adjust the margin as needed */
+  }
+  
+  .navbar-brand:nth-child(2) {
+    margin-left: 1000px; /* Move to the right corner */
+    margin-right: auto; /* Add some right margin */
+  }
+  
+  .navbar-brand:nth-child(3) {
+    margin-left: 30px;
+    margin-right: 10px; /* Adjust the margin as needed */
+  }
+  
+  .nav.navbar-nav.navbar-right > li > a {
+    color: #fff;
+    font-size: 16px;
+    margin: 0 10px;
+    padding: 15px;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .nav.navbar-nav.navbar-right > li > a:hover,
+  .nav.navbar-nav.navbar-right > li.active > a {
+    background-color: #ff0066; /* Change to your desired hover color */
+    color: #fff;
+  }
+  
+  /* Panel */
+  .panel {
+    margin-top: 30px;
+    
+  }
+  
+  .panel-heading {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+  }
+  
+  .panel-body {
+    padding: 30px;
+  }
+  .row{
+    
+    justify-content: center;
+ 
+  }
+  .panel-footer {
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 15px;
+  }
+  
+  .panel h3,
+  .panel h5 {
+    margin: 0;
+  }
+  
+  /* Alert */
+  .alert {
+    margin-bottom: 30px;
+    text-align: center;
+    width: auto;
+    
+  }
+  
+  .alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+    
+  }
+  
+  .alert a {
+    color: #856404;
+  }
+  
+  .alert a:hover {
+    color: #856404;
+    text-decoration: underline;
+  }
+  
+  /* Form */
+  .form-horizontal {
+    margin-top: 30px;
+  }
+  
+  /* Button */
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+    color: #fff;
+  }
+  
+  .btn-lg {
+    font-size: 18px;
+    padding: 10px 20px;
+  }
+  
+  /* Text */
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
