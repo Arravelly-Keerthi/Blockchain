@@ -1,4 +1,3 @@
-
 import './App.css';
 import Index from './pages/Index/index';
 import Register from './pages/Register/register';
@@ -8,6 +7,7 @@ import DHome from './pages/DHome/DHome';
 import Appointments from './components/Appointments';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createContext } from 'react';
+import DoctorProfile from './components/DoctorProfile';
 export const AgentAddressContext = createContext();
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
         <Route path="/patient" element={<Patient/>}/>
         <Route path='/home' element={<DHome/>}/>
         <Route path='/doctor-appointments' element={<Appointments/>}/>
+        <Route path="/doctor/profile/:userId" element={<DoctorProfile />} />
       </Routes>
    
     </div>
