@@ -4,6 +4,7 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
+  const fs = require('fs')
 const hre = require("hardhat");
 const { ethers } = require("hardhat");
 
@@ -18,8 +19,16 @@ async function main() {
   const Migrations = await ethers.getContractFactory("Migrations");
   const migrations = await Migrations.deploy();
   */
+;
 
+  // ... (your deployment code)
+  
+  const contractAddress = agent.address;
+  fs.writeFileSync('contract-address.json', JSON.stringify({ contractAddress }));
+  
   console.log("Agent contract deployed to:", agent.address);
+
+
  // console.log("Migrations contract deployed to:", migrations.address);
 }
 

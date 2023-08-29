@@ -7,11 +7,11 @@ import DHome from './pages/DHome/DHome';
 import Appointments from './components/Appointments';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createContext } from 'react';
-import DoctorProfile from './components/DoctorProfile';
 export const AgentAddressContext = createContext();
 
 function App() {
-  const agentAddress="0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const agentAddress=require('./Data/contract-address.json').contractAddress;
+  //console.log(agentAddress);
   return (
     <AgentAddressContext.Provider value={agentAddress}>
     <div>
