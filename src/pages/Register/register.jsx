@@ -82,7 +82,7 @@ const Register = () => {
             const buffer = stringToUint8Array(reportTitle);
             const res = await ipfs.add(buffer); // Upload the buffer to IPFS
             ipfshash = res.cid.toString();
-            // Get the IPFS has
+            // Get the IPFS hash
             
             const result = await contractWithSigner.add_patient(name,dateOfBirth,email,mobileNo,alternateNo,address,insuranceName,deductibilities,validity, ipfshash);
            // console.log(result);
