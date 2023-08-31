@@ -23,15 +23,18 @@ const [alert,setAlert]=useState(false);
         const contractWithSigner = contract.connect(signer);
         const publicKey = await signer.getAddress();    
         const Navigate=async(parameters)=>{
-            history(`/home?${new URLSearchParams(parameters).toString()}`)
-        }       
+            history(`/Dhome?${new URLSearchParams(parameters).toString()}`)
+        }   
+        const NavigateP=async(parameters)=>{
+            history(`/Phome?${new URLSearchParams(parameters).toString()}`)
+        }     
     //     console.log(publicKey);
          try{
             var result =await contractWithSigner.get_patient_list();
             var PatientList = result;
             for (var i = 0; i < PatientList.length; i++) {
                 if (publicKey.toLowerCase() === PatientList[i].toLowerCase()) {
-                    Navigate({designation:0});
+                    NavigateP({designation:0});
                     return;
                 }
             }

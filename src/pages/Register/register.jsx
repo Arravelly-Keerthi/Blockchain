@@ -65,7 +65,10 @@ const Register = () => {
 
    
     const NavigateD = (parameters) => {
-        history(`/home?${new URLSearchParams(parameters).toString()}`);
+        history(`/Dhome?${new URLSearchParams(parameters).toString()}`);
+    }
+    const NavigateP=(paremeters)=>{
+        history('/Phome');
     }
 
     const addPatient = async () => {
@@ -83,7 +86,7 @@ const Register = () => {
             
             const result = await contractWithSigner.add_patient(name,dateOfBirth,email,mobileNo,alternateNo,address,insuranceName,deductibilities,validity, ipfshash);
            // console.log(result);
-             NavigateD({designation:0});
+             NavigateP({designation:0});
             
         } catch (error) {
             console.log("Error: ", error);
@@ -94,11 +97,8 @@ const Register = () => {
     
 const handleDoctor=async(values)=>{
     try{
-       
         const selectedTimings = JSON.stringify(values.timings);
-       
-        const result=await contractWithSigner.add_doctor(values.fullName,values.phone,values.email,values.website,values.address,speciality,values.experience,values.feesPerConsultation,selectedTimings);
-        
+        const result=await contractWithSigner.add_doctor(values.fullName,values.phone,values.email,values.website,values.address,speciality,values.experience,values.feesPerConsultation,selectedTimings);   
         NavigateD({designation:1});
      }
      catch(error){
