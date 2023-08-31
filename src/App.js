@@ -13,7 +13,6 @@ export const AgentAddressContext = createContext();
 
 function App() {
   const agentAddress="0x5FbDB2315678afecb367f032d93F642f64180aa3";
- 
   return (
     <AgentAddressContext.Provider value={agentAddress}>
     <div>
@@ -25,7 +24,7 @@ function App() {
         <Route path='/Dhome' element={<DHome/>}/>
         <Route path='/Phome' element={<PHome/>}/>
         <Route path='/doctor-appointments' element={<Appointments/>}/>
-        <Route path="/doctor/profile/:userId" element={<DoctorProfile />} />
+      {/*  <Route path="/doctor/profile/:userId" element={<DoctorProfile />} />*/}
       </Routes>
    
     </div>
