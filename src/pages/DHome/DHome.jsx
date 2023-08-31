@@ -36,10 +36,9 @@ const HomePage = () => {
       var key = await signer.getAddress();
       key = key.toLowerCase();
       const result = await contractWithSigner.get_doctor(key);
-     
       setName(result[0]);
     } catch (error) {
-      console.log(error);
+      console.log("Error: ",error);
     }
   };
 
