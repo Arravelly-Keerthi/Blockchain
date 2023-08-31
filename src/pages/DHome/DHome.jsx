@@ -8,6 +8,7 @@ import Layout from '../../components/Layout'
 
 
 const HomePage = () => {
+  
   const agentContractAddress = useContext(AgentAddressContext);
   const [name, setName] = useState();
   const location = useLocation();
