@@ -1,5 +1,3 @@
-// src/components/DoctorAppointments.js
-
 import React, { useState, useEffect, useContext } from 'react';
 import { ethers } from 'ethers';
 import { AgentAddressContext } from '../App';
@@ -15,9 +13,30 @@ const DoctorAppointments = () => {
   const contractWithSigner = contract.connect(signer);
 
   const fetchPatients = async () => {
-    // Fetch the list of patients who have given access to the doctor
-    // Update the patientList state
+    try {
+      const doctorAddress = await signer.getAddress();
+      const patientAddressList = await contractWithSigner.get_accessed_patientlist_for_doctor(doctorAddress);
+  
+      const patients = [];
+  
+      for (let i = 0; i < patientAddressList.length; i++) {
+        const patientAddress = patientAddressList[i];
+        const value = await contractWithSigner.get_patient(patientAddress);
+        const [patientName, patientAge] = value;
+        
+        patients.push({
+          name: patientName,
+          age: patientAge.toNumber(),
+          address: patientAddress,
+        });
+      }
+  
+      setPatientList(patients);
+    } catch (error) {
+      console.log("Error fetching patients: ", error);
+    }
   };
+  
 
   useEffect(() => {
     fetchPatients();

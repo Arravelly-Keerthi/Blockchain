@@ -1,4 +1,3 @@
-
 import './App.css';
 import Index from './pages/Index/index';
 import Register from './pages/Register/register';
@@ -9,7 +8,6 @@ import PHome from './pages/PHome/patient'
 import Appointments from './components/Appointments';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createContext } from 'react';
-import Cookies from 'js-cookie';
 export const AgentAddressContext = createContext();
 
 function App() {
@@ -26,6 +24,7 @@ function App() {
         <Route path='/Dhome' element={<DHome/>}/>
         <Route path='/Phome' element={<PHome/>}/>
         <Route path='/doctor-appointments' element={<Appointments/>}/>
+        <Route path="/doctor/profile/:userId" element={<DoctorProfile />} />
       </Routes>
    
     </div>
