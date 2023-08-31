@@ -7,6 +7,7 @@ import DHome from './pages/DHome/DHome';
 import Appointments from './components/Appointments';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createContext } from 'react';
+import DoctorProfile from './components/DoctorProfile';
 export const AgentAddressContext = createContext();
 
 function App() {
