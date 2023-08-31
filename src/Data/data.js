@@ -65,6 +65,4 @@ export const userMenu = [
       path: `/doctor/profile/No_user`,
       icon: "fa-solid fa-user",
     },
-    { name: 'Dashboard', path: '/dashboard', icon: 'fa-solid fa-home' },
-  { name: 'Patients', path: '/patients', icon: 'fa-solid fa-users' },
   ];

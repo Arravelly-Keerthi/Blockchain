@@ -36,6 +36,7 @@ const Layout = ({ designation }) => {
   const handleLogout = () => {
     localStorage.clear();
     message.success('Logout Successful');
+      // window.ethereum.request({ method: 'eth_logout' });
     navigate('/login');
   };
 

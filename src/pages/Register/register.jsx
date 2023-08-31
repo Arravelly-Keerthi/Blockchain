@@ -65,7 +65,7 @@ const Register = () => {
 
    
     const NavigateD = (parameters) => {
-        history(`/doctor?${new URLSearchParams(parameters).toString()}`);
+        history(`/home?${new URLSearchParams(parameters).toString()}`);
     }
 
     const addPatient = async () => {
