@@ -66,3 +66,21 @@ export const userMenu = [
       icon: "fa-solid fa-user",
     },
   ];
+  export const patientMenu = [
+    {
+      name: "Home",
+      path: "/",
+      icon: "fa-solid fa-house",
+    },
+    {
+      name: 'Appointments',
+      path: '/patient-appointments',
+      icon: 'fa-solid fa-calendar',
+    },
+    {
+      name: 'Profile',
+      path: '/patient-profile',
+      icon: 'fa-solid fa-user',
+    },
+  ];
+  
