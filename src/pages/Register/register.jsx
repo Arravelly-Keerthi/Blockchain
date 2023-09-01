@@ -7,17 +7,17 @@ import { ethers } from 'ethers';
 import Agent from '../../artifacts/contracts/Agent.sol/Agent.json';
 import { create } from 'ipfs-http-client';
 import DatePicker from 'react-datepicker';
-import { Col, Form, Input, Row, TimePicker, message } from "antd";
+import { Col, Form, Input, Row, TimePicker, message,Button } from "antd";
 import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.css';
-
+ 
 const Register = () => {
     const agentContractAddress = useContext(AgentAddressContext);
     const [name, setName] = useState('');
-   
+
     const [speciality, setSpeciality] = useState();
-    const [experience,setExperience]=useState(0);
-    const [fees,setFees]=useState();
+    const [experience, setExperience] = useState(0);
+    const [fees, setFees] = useState();
     const [email, setEmail] = useState();
     const [mobileNo, setMobileNo] = useState();
     const [alternateNo, setAlternateNo] = useState();
@@ -25,11 +25,14 @@ const Register = () => {
     const [insuranceName, setInsuranceName] = useState();
     const [deductibilities, setDeductibilities] = useState();
     const [validity, setValidity] = useState();
-    const [dateOfBirth,setDateOfBirth]=useState();
+    const [dateOfBirth, setDateOfBirth] = useState();
     const [designation, setDesignation] = useState("2");
     const [showAlert, setShowAlert] = useState(false);
     const [alertinfo, setAlertinfo] = useState(false);
-
+    const [appointments, setAppointments] = useState([]);
+    const [form] = Form.useForm();
+    const [startTime, setStartTime] = useState();
+    const [endTime, setEndTime] = useState();
 
     const history = useNavigate();
 
@@ -63,11 +66,11 @@ const Register = () => {
         setAlertinfo(false); // Hide the alert
     };
 
-   
+
     const NavigateD = (parameters) => {
         history(`/Dhome?${new URLSearchParams(parameters).toString()}`);
     }
-    const NavigateP=(paremeters)=>{
+    const NavigateP = (paremeters) => {
         history('/Phome');
     }
 
@@ -83,110 +86,126 @@ const Register = () => {
             const res = await ipfs.add(buffer); // Upload the buffer to IPFS
             ipfshash = res.cid.toString();
             // Get the IPFS hash
-            
-            const result = await contractWithSigner.add_patient(name,dateOfBirth,email,mobileNo,alternateNo,address,insuranceName,deductibilities,validity, ipfshash);
-           // console.log(result);
-             NavigateP({designation:0});
-            
+
+            const result = await contractWithSigner.add_patient(name, dateOfBirth, email, mobileNo, alternateNo, address, insuranceName, deductibilities, validity, ipfshash);
+            // console.log(result);
+            NavigateP({ designation: 0 });
+
         } catch (error) {
             console.log("Error: ", error);
             alert("Something went wrong!!!");
             //window.location.reload();
         }
     };
-    
-const handleDoctor=async(values)=>{
-    try{
-        const selectedTimings = JSON.stringify(values.timings);
-        const result=await contractWithSigner.add_doctor(values.fullName,values.phone,values.email,values.website,values.address,speciality,values.experience,values.feesPerConsultation,selectedTimings);   
-        NavigateD({designation:1});
-     }
-     catch(error){
-         alert("Something went wrong!!!");
-         console.log("Error: ",error);
-         //window.location.reload();
-     }
-}
- /*   async function addAgent() {
-        // console.log(name);
-        setDesignation(parseInt(designation));
-        const signer = provider.getSigner();
-        let publicKey = await signer.getAddress();
-        publicKey = publicKey.toLowerCase();
-        //  console.log("PK:" + publicKey);
-
-        var validPublicKey = true;
-        var validAgent = true;
-        var PatientList = 0;
-        var DoctorList = 0;
-        // var InsurerList = 0;
+    const handleAddAppointmentSlot = async (values) => {
         try {
-            var result = await contract.get_patient_list();
-            PatientList = result;
-            result = await contract.get_doctor_list();
-            DoctorList = result;
-               var result = await contract.get_insurer_list();
-                var InsurerList = result; 
-            if (validPublicKey === false) {
-                handleAlert1Click();
-            }
-            else {
-                for (var j = 0; j < PatientList.length; j++) {
-                    if (publicKey === PatientList[j]) {
-                        validAgent = false;
-                    }
-                }
-                for (j = 0; j < DoctorList.length; j++) {
-                    if (publicKey === DoctorList[j]) {
-                        validAgent = false;
-                    }
-                }
-                   for (j = 0; j < InsurerList.length; j++) {
-                       if (publicKey === InsurerList[j]) {
+            console.log(values.timings);
+            setStartTime(Math.floor(values.timings[0].toDate().getTime() / 1000));
+            setEndTime(Math.floor(values.timings[1].toDate().getTime() / 1000));
+         
+          
+        } catch (error) {
+          console.error(error);
+          message.error('Failed to add appointment slot');
+        }
+      };
+    const handleDoctor = async (values) => {
+        try {
+            const result = await contractWithSigner.add_doctor(values.fullName, values.phone, values.email, values.website, values.address, speciality, values.experience, values.feesPerConsultation);
+            console.log(startTime,endTime);
+            await contractWithSigner.addAppointmentSlot(startTime, endTime);
+            form.resetFields(); // Reset form fields after successful submission
+            message.success('Appointment slot added successfully');
+            // Reload appointments after adding a slot
+            //  loadAppointments();
+            NavigateD({ designation: 1 });
+        }
+        catch (error) {
+            alert("Something went wrong!!!");
+            console.log("Error: ", error);
+            //window.location.reload();
+        }
+    }
+    /*   async function addAgent() {
+           // console.log(name);
+           setDesignation(parseInt(designation));
+           const signer = provider.getSigner();
+           let publicKey = await signer.getAddress();
+           publicKey = publicKey.toLowerCase();
+           //  console.log("PK:" + publicKey);
+   
+           var validPublicKey = true;
+           var validAgent = true;
+           var PatientList = 0;
+           var DoctorList = 0;
+           // var InsurerList = 0;
+           try {
+               var result = await contract.get_patient_list();
+               PatientList = result;
+               result = await contract.get_doctor_list();
+               DoctorList = result;
+                  var result = await contract.get_insurer_list();
+                   var InsurerList = result; 
+               if (validPublicKey === false) {
+                   handleAlert1Click();
+               }
+               else {
+                   for (var j = 0; j < PatientList.length; j++) {
+                       if (publicKey === PatientList[j]) {
                            validAgent = false;
                        }
                    }
-                //  console.log(validAgent);
-                if (validAgent === true) {
-                    handleAlert1Close();
-                    handleAlert2Close();
-                    //    console.log(designation);
-                    if (designation === "0") {
-                        var reportTitle = `Name: ${name}Public Key: ${publicKey}`;
-                        function stringToUint8Array(str) {
-                            const encoder = new TextEncoder();
-                            return encoder.encode(str);
-                        }
-                        const buffer = stringToUint8Array(reportTitle);
-                         const response = await fetch('http://localhost:5001/api/v0/add?stream-channels=true&progress=false', {
-                              method: 'POST',
-                              mode: 'non-cors',
-                              headers: {
-                                  'Access-Control-Allow-Origin': 'http://localhost:3000'
-                              },
-                              body: buffer // include the request body if required
-                          });
-                        const result = await ipfs.add(buffer); // Upload the buffer to IPFS
-                        ipfshash = result.cid.toString();
-                        // Get the IPFS has
-                        //  console.log("IPFS hash:", ipfshash);
-                        await addPatient();
-                    }
-                    else {
-                    //    await addDoctor();
-                    }
-                }
-                else {
-                    handleAlert2Click();
-                }
-
-            }
-            return false;
-        }
-        catch (error) {
-            console.log("Error: ", error)
-        }
-    }*/
+                   for (j = 0; j < DoctorList.length; j++) {
+                       if (publicKey === DoctorList[j]) {
+                           validAgent = false;
+                       }
+                   }
+                      for (j = 0; j < InsurerList.length; j++) {
+                          if (publicKey === InsurerList[j]) {
+                              validAgent = false;
+                          }
+                      }
+                   //  console.log(validAgent);
+                   if (validAgent === true) {
+                       handleAlert1Close();
+                       handleAlert2Close();
+                       //    console.log(designation);
+                       if (designation === "0") {
+                           var reportTitle = `Name: ${name}Public Key: ${publicKey}`;
+                           function stringToUint8Array(str) {
+                               const encoder = new TextEncoder();
+                               return encoder.encode(str);
+                           }
+                           const buffer = stringToUint8Array(reportTitle);
+                            const response = await fetch('http://localhost:5001/api/v0/add?stream-channels=true&progress=false', {
+                                 method: 'POST',
+                                 mode: 'non-cors',
+                                 headers: {
+                                     'Access-Control-Allow-Origin': 'http://localhost:3000'
+                                 },
+                                 body: buffer // include the request body if required
+                             });
+                           const result = await ipfs.add(buffer); // Upload the buffer to IPFS
+                           ipfshash = result.cid.toString();
+                           // Get the IPFS has
+                           //  console.log("IPFS hash:", ipfshash);
+                           await addPatient();
+                       }
+                       else {
+                       //    await addDoctor();
+                       }
+                   }
+                   else {
+                       handleAlert2Click();
+                   }
+   
+               }
+               return false;
+           }
+           catch (error) {
+               console.log("Error: ", error)
+           }
+       }*/
     return (
 
         <div>
@@ -196,10 +215,10 @@ const handleDoctor=async(values)=>{
                     <div className="navbar-header">
 
                         <Link className="navbar-brand" to={'/'}>Electronic Health Records</Link>
-                       {/* <Link className="navbar-brand" to={'/'}>Login</Link>
+                        {/* <Link className="navbar-brand" to={'/'}>Login</Link>
                         <Link className="navbar-brand" to={'/register'}>Register</Link>*/}
                     </div>
-{/*
+                    {/*
                     <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul className="nav navbar-nav navbar-right">
                             <li>
@@ -210,7 +229,7 @@ const handleDoctor=async(values)=>{
                             </li>
                         </ul>
                     </div>*/
-}
+                    }
                 </div>
 
             </nav>
@@ -225,130 +244,137 @@ const handleDoctor=async(values)=>{
                 {designation === "1" &&
                     (<div className="doctor">
                         <Form layout="vertical" onFinish={handleDoctor} className="m-3">
-                        <h4 className="">Personal Details : </h4>
-                    <Row gutter={20}>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item
-                          label="Full Name"
-                          name="fullName"
-                          required
-                          rules={[{ required: true }]}
-                          
-                        >
-                          <Input type="text" placeholder="your full name" value={name} onChange={(e) => setName(e.target.value)}  />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item
-                          label="Phone No"
-                          name="phone"
-                          required
-                          rules={[{ required: true }]}
-                        >
-                          <Input type="text" placeholder="your contact no"   />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item
-                          label="Email"
-                          name="email"
-                          required
-                          rules={[{ required: true }]}
-                        >
-                          <Input type="email" placeholder="your email address" value={email}
-                                                onChange={(e) => setEmail(e.target.value)}  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                                title="Please enter a valid email address"
+                            <h4 className="">Personal Details : </h4>
+                            <Row gutter={20}>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item
+                                        label="Full Name"
+                                        name="fullName"
+                                        required
+                                        rules={[{ required: true }]}
 
-/>
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item label="Website" name="website">
-                          <Input type="text" placeholder="your website" />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item
-                          label="Address"
-                          name="address"
-                          required
-                          rules={[{ required: true }]} 
-                        >
-                          <Input type="text" placeholder="your clinic address" value={address} onChange={(e) => setAddress(e.target.value)} />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <h4>Professional Details :</h4>
-                    <Row gutter={20}>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item>
-                          <label for="designation" className="control-label col-sm-2">Speciality:</label>
-                          <div className="col-sm-8">
-                              <select className="form-control" id="designation" required value={speciality} onChange={(e) => setSpeciality(e.target.value)}>
+                                    >
+                                        <Input type="text" placeholder="your full name" value={name} onChange={(e) => setName(e.target.value)} />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item
+                                        label="Phone No"
+                                        name="phone"
+                                        required
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Input type="text" placeholder="your contact no" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item
+                                        label="Email"
+                                        name="email"
+                                        required
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Input type="email" placeholder="your email address" value={email}
+                                            onChange={(e) => setEmail(e.target.value)} pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                            title="Please enter a valid email address"
 
-                                  <option value="Cardiology">Cardiology</option>
-                                  <option value="Pediatrics">Pediatrics</option>
-                                  <option value="Surgery (General Surgery)">Surgery (General Surgery)</option>
-                                  <option value="Dermatology">Dermatology</option>
-                                  <option value="Obstetrics and Gynecology (OB/GYN)">Obstetrics and Gynecology (OB/GYN)</option>
-                                  <option value="Orthopedics">Orthopedics</option>
-                                  <option value="Neurology">Neurology</option>
-                                  <option value="Ophthalmology">Ophthalmology</option>
-                                  <option value="Gastroenterology">Gastroenterology</option>
-                                  <option value="Endocrinology">Endocrinology</option>
-                                  <option value="Nephrology">Nephrology</option>
-                                  <option value="Pulmonology">Pulmonology</option>
-                                  <option value="Oncology">Oncology</option>
-                                  <option value="Psychiatry">Psychiatry</option>
-                                  <option value="Radiology">Radiology</option>
-                                  <option value="Anesthesiology">Anesthesiology</option>
-                                  <option value="Rheumatology">Rheumatology</option>
-                                  <option value="Infectious Diseases">Infectious Diseases</option>
-                                  <option value="Allergy and Immunology">Allergy and Immunology</option>
-                                  <option value="Emergency Medicine">Emergency Medicine</option>
-                                  <option value="Hematology">Hematology</option>
-                                  <option value="Physical Medicine and Rehabilitation">Physical Medicine and Rehabilitation</option>
-                                  <option value="Urology">Urology</option>
-                                  <option value="Gynecologic Oncology">Gynecologic Oncology</option>
-                                  <option value="Neonatology">Neonatology</option>
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item label="Website" name="website">
+                                        <Input type="text" placeholder="your website" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item
+                                        label="Address"
+                                        name="address"
+                                        required
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Input type="text" placeholder="your clinic address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <h4>Professional Details :</h4>
+                            <Row gutter={20}>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item>
+                                        <label for="designation" className="control-label col-sm-2">Speciality:</label>
+                                        <div className="col-sm-8">
+                                            <select className="form-control" id="designation" required value={speciality} onChange={(e) => setSpeciality(e.target.value)}>
+
+                                                <option value="Cardiology">Cardiology</option>
+                                                <option value="Pediatrics">Pediatrics</option>
+                                                <option value="Surgery (General Surgery)">Surgery (General Surgery)</option>
+                                                <option value="Dermatology">Dermatology</option>
+                                                <option value="Obstetrics and Gynecology (OB/GYN)">Obstetrics and Gynecology (OB/GYN)</option>
+                                                <option value="Orthopedics">Orthopedics</option>
+                                                <option value="Neurology">Neurology</option>
+                                                <option value="Ophthalmology">Ophthalmology</option>
+                                                <option value="Gastroenterology">Gastroenterology</option>
+                                                <option value="Endocrinology">Endocrinology</option>
+                                                <option value="Nephrology">Nephrology</option>
+                                                <option value="Pulmonology">Pulmonology</option>
+                                                <option value="Oncology">Oncology</option>
+                                                <option value="Psychiatry">Psychiatry</option>
+                                                <option value="Radiology">Radiology</option>
+                                                <option value="Anesthesiology">Anesthesiology</option>
+                                                <option value="Rheumatology">Rheumatology</option>
+                                                <option value="Infectious Diseases">Infectious Diseases</option>
+                                                <option value="Allergy and Immunology">Allergy and Immunology</option>
+                                                <option value="Emergency Medicine">Emergency Medicine</option>
+                                                <option value="Hematology">Hematology</option>
+                                                <option value="Physical Medicine and Rehabilitation">Physical Medicine and Rehabilitation</option>
+                                                <option value="Urology">Urology</option>
+                                                <option value="Gynecologic Oncology">Gynecologic Oncology</option>
+                                                <option value="Neonatology">Neonatology</option>
 
 
-                              </select>
-                          </div>
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item
-                          label="Experience"
-                          name="experience"
-                          required
-                          rules={[{ required: true }]}
-                        >
-                          <Input type="text" placeholder="your experience" value={experience} onChange={(e) => setExperience(e.target.value)}  />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item
-                          label="Fees Per Consultation"
-                          name="feesPerConsultation"
-                          required
-                          rules={[{ required: true }]}
-                        >
-                          <Input type="text" placeholder="your fees" value={fees} onChange={(e) => setFees(e.target.value)}  />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <Form.Item label="Timings" name="timings" required>
-                          <TimePicker.RangePicker format="HH:mm" />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={24} lg={8}></Col>
-                      <Col xs={24} md={24} lg={8}>
-                        <button className="btn btn-primary form-btn" type="submit">
-                          Submit
-                        </button>
-                      </Col>
-                    </Row> </Form></div>)}
+                                            </select>
+                                        </div>
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item
+                                        label="Experience"
+                                        name="experience"
+                                        required
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Input type="text" placeholder="your experience" value={experience} onChange={(e) => setExperience(e.target.value)} />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form.Item
+                                        label="Fees Per Consultation"
+                                        name="feesPerConsultation"
+                                        required
+                                        rules={[{ required: true }]}
+                                    >
+                                        <Input type="text" placeholder="your fees" value={fees} onChange={(e) => setFees(e.target.value)} />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <Form form={form} onFinish={handleAddAppointmentSlot}>
+                                        <Form.Item label="Timings" name="timings" required>
+                                            <TimePicker.RangePicker format="HH:mm" />
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button type="primary" onClick={form.submit}>
+                                                Add Slot
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                </Col>
+                                <Col xs={24} md={24} lg={8}></Col>
+                                <Col xs={24} md={24} lg={8}>
+                                    <button className="btn btn-primary form-btn" type="submit">
+                                        Submit
+                                    </button>
+                                </Col>
+                            </Row> </Form></div>)}
                 {designation === "0" && (
                     <div className="patient"><div className="container">
                         <div className="panel panel-default">
@@ -389,7 +415,7 @@ const handleDoctor=async(values)=>{
                                                 className="form-control"
                                                 placeholderText="Select Date of Birth"
                                                 selected={dateOfBirth} // Bind selected date to state
-                                               onChange={(date) => setDateOfBirth(date)} // Handle date change
+                                                onChange={(date) => setDateOfBirth(date)} // Handle date change
                                                 dateFormat="MM/dd/yyyy" // Format of the displayed date
                                                 peekNextMonth
                                                 showMonthDropdown
@@ -401,7 +427,7 @@ const handleDoctor=async(values)=>{
                                     </div>
 
 
-                                  
+
 
                                 </form>
 

@@ -33,7 +33,7 @@ struct doctor {
     string website;
     uint experience;
     uint fees;
-    string timings;
+    
     address[] patientAccessList;
 }
 struct insurance{
@@ -97,7 +97,7 @@ function add_patient(string memory _name,string memory _dateOfBirth,string memor
     return _name;
 
 }
-function add_doctor(string memory _name,uint _mobileNo,string memory _email,string memory _website,string memory _address,string memory _speciality,uint _experience,uint _fees,string memory _timings)public returns(string memory){
+function add_doctor(string memory _name,uint _mobileNo,string memory _email,string memory _website,string memory _address,string memory _speciality,uint _experience,uint _fees)public returns(string memory){
    address addr=msg.sender;
    doctor memory d;
     d.name = _name; 
@@ -108,7 +108,7 @@ function add_doctor(string memory _name,uint _mobileNo,string memory _email,stri
     d.website=_website;
     d.experience=_experience;
     d.fees=_fees;
-    d.timings=_timings;
+  
    // d.record = _hash;
     doctorInfo[msg.sender] = d;
     doctorList.push(addr);
@@ -230,6 +230,31 @@ function insurance_claim(address paddr, uint _diagnosis, string memory  _hash) p
     function set_hash(address paddr, string memory _hash) internal {
         patientInfo[paddr].record = _hash;
     }
+    struct AppointmentSlot {
+    uint256 startTime;
+    uint256 endTime;
+    address patient;
+    bool isBooked;
+}
+
+mapping(address => AppointmentSlot[])doctorAppointments;
+
+function addAppointmentSlot(uint256 _startTime, uint256 _endTime) public {
+    require(_startTime < _endTime, "Invalid time range");
+    doctorAppointments[msg.sender].push(AppointmentSlot(_startTime, _endTime, address(0), false));
+}
+
+function getDoctorAppointments(address _doctor) public view returns (AppointmentSlot[] memory) {
+    return doctorAppointments[_doctor];
+}
+
+function bookAppointment(address _doctor, uint256 _slotIndex) public {
+    AppointmentSlot storage slot = doctorAppointments[_doctor][_slotIndex];
+    require(!slot.isBooked, "Appointment already booked");
+    slot.isBooked = true;
+    slot.patient = msg.sender;
+}
+
 
 }
 

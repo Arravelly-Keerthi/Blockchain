@@ -7,11 +7,22 @@ const DoctorAppointments = () => {
   const agentContractAddress = useContext(AgentAddressContext);
   const [patientList, setPatientList] = useState([]);
   
+  const [appointments,setAppointments]=useState([]);
+  
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const contract = new ethers.Contract(agentContractAddress, Agent.abi, provider);
   const signer = provider.getSigner();
   const contractWithSigner = contract.connect(signer);
-
+ const doctorAppointmets=async ()=>{
+  try {
+    const doctorAddress = await signer.getAddress();
+    const doctorAppointments = await contract.getDoctorAppointments(doctorAddress);
+    setAppointments(doctorAppointments);
+    
+  } catch (error) {
+    console.error(error);
+  }
+ }
   const fetchPatients = async () => {
     try {
       const doctorAddress = await signer.getAddress();
@@ -40,7 +51,9 @@ const DoctorAppointments = () => {
 
   useEffect(() => {
     fetchPatients();
+    doctorAppointmets();
   }, []);
+  
 
   return (
     <div>
@@ -48,6 +61,16 @@ const DoctorAppointments = () => {
       <ul>
         {patientList.map((patient, index) => (
           <li key={index}>{patient.a}</li>
+        ))}
+      </ul>
+      <h2>Your Appointments</h2>
+      <ul>
+        {appointments.map((slot, index) => (
+          <li key={index}>
+            {new Date(slot.startTime * 1000).toLocaleString()} -{' '}
+            {new Date(slot.endTime * 1000).toLocaleTimeString()}{' '}
+            {slot.isBooked && `Booked by: ${slot.patient}`}
+          </li>
         ))}
       </ul>
     </div>
