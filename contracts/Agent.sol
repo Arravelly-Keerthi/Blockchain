@@ -254,7 +254,5 @@ function bookAppointment(address _doctor, uint256 _slotIndex) public {
     slot.isBooked = true;
     slot.patient = msg.sender;
 }
-
-
 }
 

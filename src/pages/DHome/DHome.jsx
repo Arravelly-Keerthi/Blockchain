@@ -5,10 +5,9 @@ import Agent from '../../artifacts/contracts/Agent.sol/Agent.json';
 import 'bootstrap/dist/css/bootstrap.css';
 import { AgentAddressContext } from '../../App';
 import Layout from '../../components/Layout'
-
+import doctor from '../Doctor/doctor';
 
 const HomePage = () => {
-  
   const agentContractAddress = useContext(AgentAddressContext);
   const [name, setName] = useState();
   const location = useLocation();

@@ -6,7 +6,6 @@ import { AgentAddressContext } from '../App';
 import { Badge, message } from 'antd';
 import './Layout.css';
 import { userMenu, doctorMenu } from '../Data/data';
-
 const Layout = ({ designation }) => {
   const [name, setName] = useState('');
   const location = useLocation();
@@ -33,12 +32,12 @@ const Layout = ({ designation }) => {
     getDoctorData();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    message.success('Logout Successful');
-      // window.ethereum.request({ method: 'eth_logout' });
-    navigate('/login');
-  };
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   message.success('Logout Successful');
+  //     // window.ethereum.request({ method: 'eth_logout' });
+  //   navigate('/login');
+  // };
 
   const SidebarMenu = designation === 0 ? userMenu : doctorMenu;
 
@@ -60,9 +59,9 @@ const Layout = ({ designation }) => {
                 <Link to={menu.path}>{menu.name}</Link>
               </div>
             ))}
-            <div className="menu-item" onClick={handleLogout}>
+            <div className="menu-item">
               <i className="fa-solid fa-right-from-bracket"></i>
-              <Link to="/login">Logout</Link>
+              <Link to="/Doctor">Accessible EMR</Link>
             </div>
           </div>
         </div>
@@ -77,7 +76,7 @@ const Layout = ({ designation }) => {
           </div>
           <div className="body">{name}</div>
         </div>
-      </div>
+      </div> 
     </div>
   );
 };

@@ -211,7 +211,7 @@ async function revokeAccess(event) {
     }
 
 }
-if(name===""||age===""||recordHash===""){
+if(name===""||recordHash===""){
     return (
         <div>The page is loading......
             Kindly refresh the page!!

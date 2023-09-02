@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { TextEncoder } from 'text-encoding';
-import "./doctor.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ethers } from 'ethers';
 import Agent from '../../artifacts/contracts/Agent.sol/Agent.json';
@@ -16,8 +14,8 @@ export default function Doctor() {
   const recordsRef = useRef(null);
 
   const [alertdanger, setAlertdanger] = useState(false);
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
   const [toggleRecordsButton, setToggleRecordsButton] = useState(0);
   const [data, setData] = useState('');
   const [patientAddress, setPatientAddress] = useState('');
@@ -40,7 +38,6 @@ export default function Doctor() {
   ailmentsDict[5] = "Heart-Disorder";
   ailmentsDict[6] = "Other";
 
-
   var docName = "";
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const contract = new ethers.Contract(agentContractAddress, Agent.abi, provider);
@@ -51,6 +48,7 @@ export default function Doctor() {
     fetchData();
     fetchPatients();
   }, []);
+
   const fetchData = async () => {
     var key = await signer.getAddress();
     key = key.toLowerCase();
@@ -63,7 +61,7 @@ export default function Doctor() {
     const table = document.getElementById("viewPatient").getElementsByTagName("tbody")[0];
     const publicKeyPatient = table.rows[index].cells[1].innerHTML;
     setPatientAddress(publicKeyPatient);
-   // console.log(publicKeyPatient);
+
     if (toggleRecordsButton % 2 === 0) {
       try {
         const result = await contractWithSigner.get_hash(publicKeyPatient);
@@ -74,7 +72,6 @@ export default function Doctor() {
         setData(response.data);
         if (recordsRef.current) recordsRef.current.innerHTML = data;
         setShowThem(true);
-
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -100,7 +97,6 @@ export default function Doctor() {
 
       for (let i = 0; i < patientAddressList.length; i++) {
         const patientAddress = patientAddressList[i];
-       // console.log(patientAddress);
         const value = await contractWithSigner.get_patient(patientAddress);
         const [a, b] = value;
 
@@ -115,8 +111,9 @@ export default function Doctor() {
       console.log("Error: ", error);
     }
   };
-  const getDateTime =  () => {
-     function AddZero(num) {
+
+  const getDateTime = () => {
+    function AddZero(num) {
       return (num >= 0 && num < 10) ? "0" + num : num + "";
     }
     var now = new Date();
@@ -131,40 +128,31 @@ export default function Doctor() {
 
   const submitDiagnosis = async (diagnosisValue, comments, index) => {
     var table = document.getElementById("viewPatient");
-   // console.log(patientAddress);
     setDiagnosis(parseInt(diagnosisValue));
 
- //   console.log(diagnosis);
     var diagnosed = ailmentsDict[diagnosis];
 
-
     const oldRecords = recordsRef.current.innerHTML;
-   var time=await getDateTime();
+    var time = await getDateTime();
     console.log(time);
     var newRecords =
       `Diagnosed By : ${docName}
 Diagnosis Time : ${time}
 Diagnosis : ${diagnosed}
 Comments : ${comments}
-        
 `
     var updatedRecords = oldRecords + newRecords;
     if (!isNaN(diagnosis)) {
-
       try {
         const result = await ipfs.add(updatedRecords);
-        
         const ipfshash = result.path;
         try {
-          const gasLimit=100000;
-          const val = await contractWithSigner.insurance_claim(patientAddress, diagnosis, ipfshash,{gasLimit});
+          const gasLimit = 100000;
+          const val = await contractWithSigner.insurance_claim(patientAddress, diagnosis, ipfshash, { gasLimit });
           alert("Your diagnosis has been submitted.");
-          // delete content row
           setShowThem(false);
-          // delete main row of corresponding content row
-          table.deleteRow(index+1);
-        }
-        catch (error) {
+          table.deleteRow(index + 1);
+        } catch (error) {
           setAlertdanger(true);
           console.log("Error: ", error);
         }
@@ -172,36 +160,27 @@ Comments : ${comments}
       catch (error) {
         console.log("Error: ", error);
       }
-
-    }
-    else {
+    } else {
       alert("Select a diagnosis");
     }
-   
-   
-
-    
   }
+
   /////////////////////////////////////////
-  if(name===""||age===""){
+  if (name === "" || age === "") {
     return (
-        <div>The page is loading......
-          Kindly refresh the page!!
-        </div>
+      <div>The page is loading...
+        Kindly refresh the page!!
+      </div>
     )
-  
-}
+  }
 
   return (
     <div>
       <nav className="navbar navbar-inverse navbar-static-top" role="navigation">
         <div className="container-fluid">
-
           <div className="navbar-header">
-            
             <Link className="navbar-brand" to={"/"}>Electronic Health Records</Link>
           </div>
-
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul className="nav navbar-nav navbar-right">
               <li>
@@ -209,36 +188,10 @@ Comments : ${comments}
               </li>
             </ul>
           </div>
-
         </div>
-
       </nav>
 
       <div className="container">
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <h3 className="text-center">Personal Information</h3>
-          </div>
-          <div className="panel-body">
-            <div className="row">
-              <div className="col-sm-offset-1 col-sm-10">
-                <table className="table">
-                  <tr>
-                    <th>Name:</th>
-                    <td id="name">{name}</td>
-                  </tr>
-                  <tr>
-                    <th>Age:</th>
-                    <td id="age">{age}</td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-
         <div className="panel panel-default">
           <div className="panel-heading">
             <h3 className="text-center">Accessible EMRs</h3>
@@ -272,17 +225,15 @@ Comments : ${comments}
                           </td>
                         </tr>
                         {showThem && <tr>
-                          <td colSpan="3"> {/* Assuming you want the record component to span across all columns */}
+                          <td colSpan="3">
                             <Record publicKeyPatient={patientAddress} recordsRef={recordsRef} data={data} submitDiagnosis={submitDiagnosis} index={index} />
                           </td>
                         </tr>}
                       </React.Fragment>
-
                     ))}
                   </tbody>
                 </table>
               </div>
-
             </div>
           </div>
         </div>
