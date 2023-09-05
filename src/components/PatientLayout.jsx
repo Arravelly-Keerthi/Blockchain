@@ -51,7 +51,7 @@ const PatientLayout = ({ isPatient }) => {
       <div className={layoutClassName}>
         <div className="sidebar">
           <div className="logo">
-            <h6 className="text-light">DOC APP</h6>
+            <h6 className="text-light">PATIENT APP</h6>
             <hr />
           </div>
           <div className="menu">
@@ -83,7 +83,7 @@ const PatientLayout = ({ isPatient }) => {
               <Badge count={1}>
                 <i className="fa-solid fa-bell"></i>
               </Badge>
-              <Link to="/profile">{name}</Link>
+              <Link to="/Patient">{name}</Link>
             </div>
           </div>
           <div className="body">{name}</div>

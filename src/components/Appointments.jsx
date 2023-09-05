@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { ethers } from 'ethers';
 import { AgentAddressContext } from '../App';
 import Agent from '../artifacts/contracts/Agent.sol/Agent.json';
-
+import './Appointments.css';
 const DoctorAppointments = () => {
   const agentContractAddress = useContext(AgentAddressContext);
   const [patientList, setPatientList] = useState([]);
@@ -56,7 +56,7 @@ const DoctorAppointments = () => {
   
 
   return (
-    <div>
+    <div class="container">
       <h1>Doctor Appointments</h1>
       <ul>
         {patientList.map((patient, index) => (

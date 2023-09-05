@@ -545,10 +545,50 @@ const Register = () => {
                                             />
                                         </div>
                                     </div>
-
-
+                                    
+        
                                 </form>
-
+                                <div className="form-group">
+              <label
+                className="control-label col-sm-2"
+                htmlFor="startTime"
+              >
+                Appointment Slot:
+              </label>
+              <div className="col-sm-8">
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item
+                      name="startTime"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please select the start time',
+                        },
+                      ]}
+                    >
+                      <TimePicker format="HH:mm" />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="endTime"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please select the end time',
+                        },
+                      ]}
+                    >
+                      <TimePicker format="HH:mm" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+            <Button type="primary" onClick={form.submit}>
+                                                Add Slot
+                                            </Button>
                                 <div className="text-center">
                                     <button className="btn btn-primary btn-lg" onClick={addPatient}>Register</button>
                                 </div>
