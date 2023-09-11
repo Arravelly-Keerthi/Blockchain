@@ -16,8 +16,8 @@ contract Agent {
         string record;
         
         string email;
-        uint mobileNo; // Changed to uint
-        uint alternateNo; // Changed to uint
+        string mobileNo; // Changed to uint
+        string alternateNo; // Changed to uint
         string houseaddress;
         string insuranceName;
         uint deductibilities; // Changed to uint
@@ -79,7 +79,7 @@ function add_agent(string memory _name,  uint _designation, string memory _hash)
    }
 }
 
-function add_patient(string memory _name,string memory _dateOfBirth,string memory _email,uint _mobileNo,uint _alternateNo,string memory _address,string memory _insuranceName,uint _deductibilities,string memory _validity,string memory _hash)public returns(string memory){
+function add_patient(string memory _name,string memory _dateOfBirth,string memory _email,string memory _mobileNo,string memory _alternateNo,string memory _address,string memory _insuranceName,uint _deductibilities,string memory _validity,string memory _hash)public returns(string memory){
    address addr=msg.sender;
    patient memory p;
     p.name = _name;
@@ -115,10 +115,17 @@ function add_doctor(string memory _name,uint _mobileNo,string memory _email,stri
     return d.name;
 
 }
-function get_patient(address addr) view public returns (string memory , string memory, uint[] memory , address, string memory ){
-    // if(keccak256(patientInfo[addr].name) == keccak256(""))revert();
-    return (patientInfo[addr].name, patientInfo[addr].dateOfBirth, patientInfo[addr].diagnosis, Empty[addr], patientInfo[addr].record);
+function get_patient(address addr) view public returns (string memory, string memory, string memory, string memory, string memory,string memory) {
+    return (
+        patientInfo[addr].name,
+        patientInfo[addr].dateOfBirth,
+        patientInfo[addr].email,
+        patientInfo[addr].mobileNo,
+        patientInfo[addr].alternateNo,
+        patientInfo[addr].houseaddress
+    );
 }
+
 
 function get_doctor(address addr) view public returns (string memory,uint,string memory,uint ){
     // if(keccak256(doctorInfo[addr].name)==keccak256(""))revert();

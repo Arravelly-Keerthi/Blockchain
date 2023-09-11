@@ -86,8 +86,8 @@ const Register = () => {
             const res = await ipfs.add(buffer); // Upload the buffer to IPFS
             ipfshash = res.cid.toString();
             // Get the IPFS hash
-
-            const result = await contractWithSigner.add_patient(name, dateOfBirth, email, mobileNo, alternateNo, address, insuranceName, deductibilities, validity, ipfshash);
+            const formattedDate = dateOfBirth.toLocaleDateString('en-US');
+            const result = await contractWithSigner.add_patient(name, formattedDate, email, mobileNo, alternateNo, address, insuranceName, deductibilities, validity, ipfshash);
             // console.log(result);
             NavigateP({ designation: 0 });
 
